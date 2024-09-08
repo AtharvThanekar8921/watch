@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Remove Vehicles</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1 {
+            color: black;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 32px;
+        }
+        .input-group {
+            margin: 50px 0px;
+        }
+        .input-group input {
+            height: 45px;
+            margin-left: 40px;
+            margin-right: 30px;
+        }
+        .input-group .btn-add {
+            background-color: #f5bf23;
+            color: white;
+            padding: 0px 63px;
+            height: 45px;
+            margin-right: 20px;
+        }
+        .input-group .btn-remove {
+            background-color: black;
+            color: aliceblue;
+            padding: 0px 50px;
+            height: 45px;
+            margin-right: 20px;
+        }
+        .input-group .btn-add:hover {
+            background-color: black;
+            color: #f5bf23;
+        }
+        .input-group .btn-remove:hover {
+            background-color: #f5bf23;
+        }
+        ul {
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        li {
+            position: relative;
+            display: block;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: .25rem;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+    function addItem() {
+        var ul = document.getElementById("dynamic-list");
+        var ARVehicles = document.getElementById("ARVehicles");
+        var li = document.createElement('li');
+        
+        li.setAttribute('id', ARVehicles.value);
+        li.appendChild(document.createTextNode(ARVehicles.value));
+        
+        // Add click event to populate the input field with the item's value
+        li.addEventListener('click', function() {
+            ARVehicles.value = this.id;
+        });
+        
+        ul.appendChild(li);
+
+        // Send the vehicle name to the server using AJAX
+        $.ajax({
+    type: "POST",
+    url: "/api/AddVehicles",
+    data: { 
+        vehicleName: ARVehicles.value, // The field name must match the one in your schema
+        actionType: "add"
+    },
+    success: function(response) {
+        console.log("Vehicle added successfully:", ARVehicles.value);
+    },
+    error: function(xhr, status, error) {
+        console.error("Failed to add vehicle:", error);
+    }
+});
+
+
+        // Clear the input field after adding the item
+        ARVehicles.value = "";
+    }
+
+        function removeItem() {
+            var ul = document.getElementById("dynamic-list");
+            var ARVehicles = document.getElementById("ARVehicles");
+            var item = document.getElementById(ARVehicles.value); // Get the list item by its id
+
+            if (item) { // Check if the item exists before trying to remove it
+                ul.removeChild(item); // Remove the item from the list
+            }
+
+            // Clear the input field after adding the item
+            ARVehicles.value = "";
+        }
+    </script>
+</head>
+<body>
+    <div class="vehicles">
+        <div class="row">
+            <div class="col-10">
+                <h1>Add and Remove Vehicles</h1> 
+                <form id="vehicle-form" class="form-container" action="http://localhost:3000/api/AddVehicles" method="POST">
+
+                <div class="input-group">
+                    <input type="text" id="ARVehicles" class="form-control">
+                    <div class="input-group-append">
+                        <button onclick="addItem()" class="btn btn-add" type="button">Add Item</button>
+                        <button onclick="removeItem()" class="btn btn-remove" type="button">Remove Item</button>
+                    </div>
+                </div>
+                <ul id="dynamic-list"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupervisorRegistration</title>
+    <link rel="stylesheet" href="supervisorRegistration.css">
+</head>
+<body>
+    <div id="popupOverlay" class="overlay-container">
+        <div class="popup-box">
+            <h2 style="color: #f5bf23;">Supervisor Login</h2>
+            <form class="form-container" action="http://localhost:3000/api/validateSupervisor" method="POST">
+                <label class="form-label" for="name">Username:</label>
+                <input class="form-input" type="text" placeholder="Enter Your Username" id="name" name="name" required>
+                <label class="form-label" for="password">Password:</label>
+                <input class="form-input" type="password" placeholder="Enter Your password" id="password" name="password"required>
+
+                <button class="btn-submit" type="submit">Submit</button>
+            </form>
+
+            <button class="btn-signup" onclick="window.location.href='signupSupervisor.html'">Sign Up</button>
+
+            <button class="btn-close-popup" onclick="window.location.href='index.html'">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function togglePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.toggle('show');
+        }
+        window.onload = function() {
+            togglePopup();
+        };
+    </script>
+</body>
+</html>
